@@ -1,0 +1,28 @@
+Sub Main
+' Instantiate a handle to BHAO
+
+Set Host = CreateObject( "BZWhll.WhllObj" )
+
+ReturnValue = Host.OpenSessio( 1, 1, "", 30, 1 )
+If ( ReturnValue ) Then
+	Host.MsgBox "Error connecting to host!", 48
+	End Sub
+End If
+
+RetVal = Host.Connect ("A")
+If (RetVal) Then	
+	Host.MsgBox "Error Connecting to Session A!", 4B
+End If
+
+****************
+'BlueZone automation
+Dim System, Sess0, MyScreen As Object
+Set System = CreateObject("Bzwhll.Whllobj")
+Set Sess0 = System.ActiveSession
+Set MyScreen = Sess0.Screen
+
+User = Environ("USERNAME")
+
+FileName = "C:\Documents and Settings\" & User & "\My Documents\BlueZone\Scripts\test.bzs"
+Set WSHShell = CreateObject("Wscript.Shell")
+WSHShell.Run (FileName)
