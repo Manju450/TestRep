@@ -1,0 +1,18 @@
+strFileName="c:\Googlemaps.png"
+browser("name:=Google Maps").Page("title:=Google Maps").CaptureBitmap strFileName
+
+Dim ScreenName
+
+  On Error Resume Next
+
+  ScreenName = " "
+  
+  CurrentTime = "_Test_Case"&"_"& Day(Now)&"_"& Month(Now)&"_"& Year(Now)&"_"&
+
+   Hour(Now)&"_"& Minute(Now)&"_"& Second(Now)
+
+  ScreenShotName = "Name_of_the_Screen" &  CurrentTime & ".png"
+
+  ScreenName ="Path where the Screenshot needs to be stored"&"\"&ScreenShotName
+
+  Desktop.CaptureBitmap ScreenName,True
