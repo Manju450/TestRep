@@ -1,5 +1,6 @@
 strFileName="c:\Googlemaps.png"
 browser("name:=Google Maps").Page("title:=Google Maps").CaptureBitmap strFileName
+'*****************************
 
 Dim ScreenName
 
@@ -16,3 +17,149 @@ Dim ScreenName
   ScreenName ="Path where the Screenshot needs to be stored"&"\"&ScreenShotName
 
   Desktop.CaptureBitmap ScreenName,True
+'********************************************
+
+Function SaveScreenshotInWord(strScreenshotFileName,ScreenName,Row)
+    Dim objWord,objSelection,objDoc,obj
+     Set objWord = CreateObject("Word.Application")
+    'objWord.Visible = True
+    Set objDoc = objWord.Documents.Open(Datatable.Value("Screenshot_Path","Test Cases"))
+    Set objSelection = objWord.Selection
+    Set objRang = objDoc.Range()
+    Set objShape = objDoc.inlineShapes
+    objWord.Selection.EndKey 6,0
+    objShape.AddPicture(strScreenshotFileName)
+    objWord.Selection.TypeText ScreenName
+    objWord.Selection.TypeParagraph()
+    Set obj = CreateObject("Scripting.FileSystemObject") 
+    obj.DeleteFile(strScreenshotFileName)    
+    objDoc.save()
+    objDoc.close()
+    objWord.Quit()
+    Set obj = Nothing
+    Set objDoc = Nothing
+    Set objWord = Nothing
+
+End Function
+'******************************************
+' For Killing Word Object
+Set objWord = Nothing
+SystemUtil.CloseProcessByName("WINWORD.exe")
+Wait(2)
+
+
+'**************************************
+Try this Jkarurosu:Use Movedown method
+
+Set objWord = CreateObject("Word.Application")
+objWord.Visible = True
+Set objDoc = objWord.Documents.Add()
+Set objSelection = objWord.Selection
+
+'Set objRang = objDoc.Range()
+Set objShape = objDoc.inlineShapes
+
+''Add Picture to word file
+fname="C:UsersPublicPicturesSample PicturesKoala.jpg"
+fname2="C:UsersPublicPicturesSample PicturesTulips.jpg"
+objShape.AddPicture (fname)
+objWord.Selection.MoveDown 1,0
+objWord.Selection.TypeParagraph()
+
+objShape.AddPicture (fname2)
+objWord.Selection.MoveDown 1,0
+objWord.Selection.TypeParagraph()
+
+''Save Word File
+objDoc.saveas("C:UserssunshineDesktopTest.docx")
+
+'******************************************
+
+Capture Screenshots and insert them into Word Document using UFT/QTP
+Having test results as a proof of testing is an essentail thing.If you want to capture screenshots of a test application and insert them sequentially in a word document then follow the below given instructions.
+
+Copy the below given functions into your common function librray and declare a global variable with name "strCapImages
+CaptureAUTScreenShot
+CopyImagesToWord
+Modify the second line of "CaptureAUTScreenShot" function to provide the parent object of the actual test application.
+
+Function CaptureAUTScreenShot
+    ImageDir = "F:\UFT_WorkSPace\ImageDir\"
+    Set BR = Browser("name:=.*mercury.*")
+    If BR.Exist Then
+        strTime = Split(Replace(Time,":","-")," ")
+        ImageName = strTime(0) & " " & strTime(1)
+        Set fso = CreateObject("Scripting.FileSystemObject")
+        On Error Resume Next
+        BR.CaptureBitmap ImageDir & ImageName & ".png"
+        strCapImages = strCapImages & "," & ImageDir & ImageName & ".png"
+        Set fso = Nothing
+
+        If Err.Number > 0 Then
+            Reporter.ReportEvent micFail,"Some error occured while capturing Screen shot",""
+        End If
+        On Error Goto 0
+    End If
+End Function
+
+Function CopyImagesToWord(WordFileName)
+    Const MOVE_SELECTION = 0
+    Const END_OF_STORY = 6
+    strCapImages = MID(strCapImages,2)
+    If strCapImages <> Empty Then
+        arrStrCapImages = Split(strCapImages,",")
+    End If
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FileExists(WordFileName) Then
+        blnExistingFile = True
+    Else
+        blnExistingFile = False
+    End If
+    Set fso = Nothing
+    Set objWord = CreateObject("Word.Application")
+
+    If blnExistingFile = False Then
+        Set objDoc = objWord.Documents.Add
+    Else
+        Set objDoc = objWord.Documents.Open(WordFileName)
+    End If
+
+    Set objSelection = objWord.Selection
+    objSelection.EndKey END_OF_STORY,MOVE_SELECTION
+    objSelection.TypeParagraph
+    objSelection.Font.Name = "Verdana"
+    objSelection.Font.Size = 12
+    objSelection.Font.Bold = True
+    objSelection.ParagraphFormat.Alignment = wdAlignParagraphCenter
+    objSelection.TypeText "Captured Screen Shots copied to word document on " & Now
+    objSelection.TypeParagraph
+
+    For intCnt = 0 to Ubound(arrStrCapImages)
+            objSelection.EndKey END_OF_STORY,MOVE_SELECTION
+            objSelection.TypeParagraph
+            objSelection.Font.Name = "Verdana"
+            objSelection.Font.Size = 12
+            objSelection.InlineShapes.AddPicture arrStrCapImages(intCnt),true
+            objSelection.EndKey END_OF_STORY,MOVE_SELECTION
+            objSelection.TypeParagraph
+            If Err.number > 0 Then
+                Reporter.ReportEvent micWarning,"Invalid Image file path: " & arrStrCapImages(intCnt)
+            End If
+            On error Goto 0
+    Next
+        'Saving the word document
+        objSelection.WholeStory
+        ObjDoc.SaveAs(WordFileName)
+        objWord.Quit(wdSaveChanges)
+        OutputToWord = True
+        If Err.number > 0 Then
+            Reporter.ReportEvent micFail,"Unable to Save word document",""
+        End If
+        On error Goto 0
+        arrStrCapImages = Null
+End Function
+
+'*****************************************
+
+
+
