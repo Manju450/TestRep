@@ -1,0 +1,66 @@
+Dim intTestID, FldPath, TestSetName, i
+Dim TestSetFact, tsTreeMgr, tSetFolder, TestSetsList, theTestSet
+Dim TestSetIdentifier, TSTestFact, TestSetTestsList, testInstanceF, aFilter
+Dim lst, tstInstance
+ 
+intTestID = "8968"
+ 
+FldPath = TextBox3.Text '"Root\ProjFold\Release1\BRD"
+TestSetName = ComboBox3.Text '"BRD" '
+ 
+Set Connection = CreateObject("TDApiOle80.TDConnection")
+Connection.InitConnectionEx Sheet2.Range("B1").Value2
+Connection.Login TextBox1.Text, TextBox2.Text
+Connection.Connect ComboBox1.Text, ComboBox2.Text
+ 
+Set TestSetFact = Connection.TestSetFactory
+Set tsTreeMgr = Connection.TestSetTreeManager
+ 
+Set tSetFolder = tsTreeMgr.NodeByPath(FldPath)
+Set TestSetsList = tSetFolder.FindTestSets(TestSetName)
+Set theTestSet = TestSetsList.Item(1)
+TestSetIdentifier = theTestSet.ID
+i = 0
+Set TSTestFact = theTestSet.TSTestFactory
+Set TestSetTestsList = TSTestFact.NewList("")
+ 
+Set testInstanceF = Connection.TSTestFactory
+Set aFilter = testInstanceF.Filter
+ 
+aFilter.Filter("TC_TEST_ID") = intTestID
+Set lst = testInstanceF.NewList(aFilter.Text)
+Set tstInstance = lst.Item(1)
+MsgBox (tstInstance.Field("TS_Name"))
+'tstInstance.Status = "Failed"
+'tstInstance.Field("TC_STATUS") = Item1.Status '"Passed"
+'tstInstance.Post
+Dim RunF, runName, NewRun, runStepF, runlst, Item1, runStep2
+  
+MsgBox (tstInstance.Field("TS_Subject"))
+Set RunF = tstInstance.RunFactory
+runName = "Run_" & Month(Date) & "-" & Day(Date) & "_" & Hour(Now) & "-" & Minute(Now) & "-" & Second(Now)
+Set NewRun = RunF.AddItem(Null)
+NewRun.Status = "Passed"
+NewRun.Name = runName
+NewRun.Post
+NewRun.CopyDesignSteps
+NewRun.Post
+Set runStepF = NewRun.StepFactory
+Set runlst = runStepF.NewList("")
+For Each Item1 In runlst
+      Set runStep2 = Item1
+      runStep2.Status = "Passed" '
+      runStep2.Field("ST_ACTUAL") = "As Expected"
+      runStep2.Post
+Next
+'tstInstance.Refresh
+tstInstance.Status = "Failed"    '<-------I am getting error in this line, i have attached screenshot for your reference.
+'The Error Description was
+'Run-time error '-2147220204 (80040514)'
+'You do not have required Permission to execute this action"
+ 
+tstInstance.Post
+Connection.DisconnectProject
+Connection.ReleaseConnection
+'Set QC = Nothing
+Set Connection = Nothing
