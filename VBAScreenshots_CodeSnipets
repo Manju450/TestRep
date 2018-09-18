@@ -1,0 +1,17 @@
+ActiveWindow.EnvelopeVisible = True 
+ActiveWindow.SetFocus
+
+
+
+Sub NextWindow() 
+ 'Two or more documents must be open for this statement to execute. 
+ ActiveDocument.ActiveWindow.Next.Activate 
+End Sub
+
+
+Sub PasteScreenShot()
+Application.SendKeys "({1068})"
+ActiveSheet.Paste
+End Sub
+
+Application.SendKeys "({1068})", True
