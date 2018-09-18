@@ -1,0 +1,105 @@
+Sample VBScript
+This script is designed to be used with BlueZone Desktop. The script launches an already existing BlueZone iSeries (AS/400) configuration (iseries.zad), navigates to the user's job log, and writes the contents of the job log to a file and store it in the following location:
+C:\JOBLOG.TXT
+To modify and use the script:
+1.	Create a new text document. Name it anything you want and save the file with a .vbs file extension.
+2.	Copy and paste the entire script into the document you just created.
+3.	Copy the script into the BlueZone \scripts folder.
+4.	Launch the BlueZone Script Host and Debugger program.
+5.	Click File → Open from the menu bar.
+6.	Locate the script you just created and highlight it and click Open. The script appears in the main window.
+' Sample Visual Basic script using BlueZone Host Automation Object
+'
+' This sample script will run a BlueZone session and then 
+' logon to an iSeries host and write the Job Log to the disk 
+' file C:\JOBLOG.TXT.
+'
+ 
+' Subroutine Main
+'
+Sub Main
+ 
+' Instantiate a handle to BHAO
+'
+Set Host = CreateObject( "BZWhll.WhllObj" )
+ 
+' Run BlueZone iSeries Display
+' with session ID of S1
+' use an exiting config file called iseries.zad
+' timeout and return error if no signon screen after 30 seconds
+' continue with script execution after host sends 1 screen paint
+'
+ResultCode = Host.OpenSession( 1, 1, "iseries.zad", 30, 1 )
+If ResultCode <> 0 Then
+   Host.MsgBox "Error connecting to host!", 4096
+End If
+ 
+' connect to session with hllapi id of "A"
+' return error if session not found
+'
+ResultCode = Host.Connect( "A" )
+If ResultCode <> 0 Then
+   Host.MsgBox "Error connecting to session A!", 4096
+End If
+ 
+' logon to host
+' then wait for host to unlock the keyboard
+'
+Host.SendKey "username@Tpassword@E"
+Host.WaitReady 10, 1
+ 
+' go to Display Job Log screen
+Host.SendKey "1@E"
+Host.WaitReady 10, 1
+Host.SendKey "1@E"
+Host.WaitReady 10, 1
+Host.SendKey "10@E"
+Host.WaitReady 10, 1
+ 
+' create disk file C:\JOBLOG.TXT
+'
+Set fso = CreateObject( "Scripting.FileSystemObject" )
+Set f = fso.OpenTextFile( "c:\joblog.txt", 2, True )
+ 
+' write the job log screens to disk
+' read the screens until "Bottom" is found at position
+' row 19, column 74 
+'
+MoreText = "More.."
+BottomText = "Bottom"
+While MoreText <> BottomText
+   For i = 1 to 24
+      Host.ReadScreen Buf, 80, i, 1
+      f.WriteLine Buf
+   Next
+   f.WriteLine " "
+   Host.ReadScreen MoreText, 6, 19, 74
+Wend
+ 
+' close the file
+'
+f.Close
+ 
+' logoff from host
+'
+Host.SendKey "@E"
+Host.WaitReady 10, 1
+Host.SendKey "@3"
+Host.WaitReady 10, 1
+Host.SendKey "90@E"
+Host.WaitReady 10, 1
+ 
+' close BlueZone iSeries Display
+' having session id of S1
+'
+Host.CloseSession 1, 1
+ 
+' end of Subroutine Main
+'
+End Sub
+ 
+' run Subroutine Main
+'
+Main
+Related Links
+Host Automation Object samples (Parent Topic)
