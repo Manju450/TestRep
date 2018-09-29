@@ -1,0 +1,60 @@
+Program 1:
+
+Private Sub OpenDatabase_Click()
+ 
+Dim objAccess As Object
+Dim i As Integer
+Dim whwnd As Long
+ 
+On Error Resume Next
+ 
+Set objAccess = GetObject(, "access.application")
+If objAccess Is Nothing Then
+'get a reference to the access application object
+    Set objAccess = GetObject("", "access.application")
+'open the database
+ 
+    objAccess.opencurrentdatabase "C:\GMD\GMD Simulation.mdb"
+        
+    'Windows("GMD Simulation Input").Activate
+    'If MsgBox("Do you want to make access " & vbCrLf & "Application visible?", vbYesNo, "Display Access") = vbYes Then
+    'AppActivate() = 0
+               
+    'End If
+ 
+End If
+ 
+Set objAccess = Nothing
+End Sub
+
+
+Program 2:
+Private Declare Function Findwindow Lib "user32" Alias "FindWindowA" (ByVal lpclassname As String, ByVal lpwindowname As String) As Long
+Private Declare Function showwindow Lib "user32" (ByVal hwnd As Long, ByVal ncmdshow As Long) As Long
+Private Const sw_shownormal = 4
+ 
+Private Sub OpenDatabase_Click()
+Dim results
+Dim objAccess As Object
+Dim i As Integer
+Dim whwnd As Long
+ 
+On Error Resume Next
+ 
+Set objAccess = GetObject(, "access.application")
+If objAccess Is Nothing Then
+'get a reference to the access application object
+    Set objAccess = GetObject("", "access.application")
+'open the database
+ 
+    objAccess.opencurrentdatabase "C:\GMD\GMD Simulation.mdb"
+    whwnd = Findwindow("Microsoft Excel", vbNullString)
+    showwindow whwnd, sw_shownormal
+    If whwnd = 0 Then
+    AppActivate "GMD Simulation Input"
+    End If
+    
+End If
+ 
+Set objAccess = Nothing
+End Sub
