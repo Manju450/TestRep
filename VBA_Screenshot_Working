@@ -1,0 +1,75 @@
+
+Private Declare Sub keybd_event Lib "user32" (ByVal bVk As Byte, ByVal bScan As Byte, ByVal dwFlags As Long, ByVal dwExtraInfo As Long)
+Private Declare Sub Sleep Lib "kernel32.dll" (ByVal dwMilliseconds As Long)
+Private Const VK_SNAPSHOT As Byte = 44
+Private Const VK_LCONTROL As Long = &HA2
+Private Const VK_V = &H56
+Private Const KEYEVENTF_KEYUP = &H2
+
+Sub TakeScreenshot()
+
+    Dim END_OF_STORY, MOVE_SELECTION, i
+
+    Dim curDate, parameter As String
+    curDate = Format(Now(), "mm/dd/yy")
+
+For i = 1 To 1
+    
+    
+    Set wordobj = CreateObject("Word.Application")
+    Set objDoc = wordobj.Documents.Add 'Create a new word document
+    
+'    Set objSelection = wordobj.Selection
+'    objSelection.Font.Bold = True
+'    objSelection.Font.Size = "12"
+'    objSelection.Font.Color = RGB(0, 0, 0)
+'
+'    objSelection.TypeText curDate
+    
+    parameter = curDate & vbCrLf & "This is a parameter"
+    
+    Call Capture(wordobj, parameter)
+    
+    parameter = "This is a second comment"
+    
+    Call Capture(wordobj, parameter)
+     
+    objDoc.SaveAs ("C:\Users\admin\Desktop\" & "Screenshot_" & i & ".docx")
+    wordobj.Quit
+    Set wordobj = Nothing
+     
+Next i
+       
+
+End Sub
+
+Sub Capture(wordobj, parameter)
+
+    'Set objDoc = wordobj.Documents.Open("C:\Users\admin\Desktop\" & "Screenshot_1.docx")
+    
+    'wordobj.Visible = True
+    keybd_event VK_SNAPSHOT, 0, 0, 0
+    
+    END_OF_STORY = 6
+
+    MOVE_SELECTION = 0
+    
+    Set objSelection = wordobj.Selection
+    
+    objSelection.Font.Bold = True
+
+    objSelection.EndKey END_OF_STORY, MOVE_SELECTION
+
+    objSelection.Font.Size = "12"
+
+    objSelection.Font.Color = RGB(0, 0, 0)
+    
+    'objSelection.TypeText vbCrLf
+
+    objSelection.TypeText (parameter & vbCrLf)
+    
+    objSelection.Paste
+    
+    objSelection.TypeText vbCrLf
+
+End Sub
