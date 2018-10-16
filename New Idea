@@ -1,0 +1,74 @@
+Before Idea Implementation:
+
+Before this implementation, testers used to fill all the mandatory fields for onboarding customer and approve the On-boarding customers was necessary to create test data for execution.
+
+Following were the manual processes followed to on-board a customer through CICS screens,
+1) Login with one user and need to fill all the basic details of a customer.
+2) Mandatory fields should be filled in multiple screens / panels.
+3) After filling all the fields.save the customer and note down the application ID.
+4) After few minutes, approve the application and verify the approval status. 
+
+This process was so monotonous and time consuming which led to lot of manual error's and in most cases ended up with insufficient test data.
+
+Kaizen Idea:
+
+Kaizen idea was to have an automated process through which customer details are entered and approved thereby On-boarding the customer easily.
+
+An excel based macro utility was designed which would automatically fill the details of the customer and have ready to use data for execution.
+
+Following is the process to complete On-boarding using macro.
+1) Tester to provide the customer details in an excel untility.
+2) Excel macro would provide all the data for mandatory fields and will be sent for approval.
+3) Macro will automatically login with appropriate role credentials, search for the customer ID and then approves it.
+4) Excel macro will store all the customer details in a data sheet for future reference.
+
+
+After Idea Implementation:
+Tester's doesn’t need to fill all customer details in multiple tabs and no need to approve with multiple roles.This tool will automatically fill all the details and apoproves it thereby onboard a Customer successfully.
+
+
+Benefits:
+• Saves time on creating preconditions (Onboarding customer) and so tester can focus more on execution instead of test data prep.
+• Tester don’t need to fill all the customer details manually thereby reducing manual effort.
+• Tester can choose what data required to be filled and remove unwanted data.
+
+Personal / Team Value and Savings:
+Calculation
+
+Customer onboarded  for NorthStar and Pave Project 
+550 Test Cases(150 Pave + 400 NorthStar) Customers onboarded. 
+
+This is a continuos process and hence this tool can be reused for multiple releases in a year
+Pave - Expected to have 2 releases in a year
+CBR\Northstar - Expected to have 2 releases in a year
+
+Hence In a year this macro can be used atleast 4 times i.e 550*4 = 2200 test cases
+ 
+Before Automation:     
+Time  Taken for onboarding one customer in Hrs = 0.35
+     
+After Automation:   
+ Time taken for onboarding one customer in Hrs  = 0.03
+ 
+Calculation Details: 
+Manual Process:   
+Time  Taken for onboarding one customer in Hrs =  0.35
+On-boarding customer to be created for # of test cases = 2200
+Total Time taken for onboarding 2200 customer in Hrs =770
+ 
+Automated Process: 
+   Time spent in creating the solution in Hrs =  4
+   Total Time taken for onboarding  customer in Hrs =  0.03 
+   On-boarding customer to be created for # of test cases = 2200
+   Total Time taken for creating 2200 customers in Hrs =  70
+
+
+Net Savings: Manual Effort - Automated Effort in Hrs = 700
+  
+With 20-80 Onsite Offshore ratio:
+ Onsite Billing rate per hour in $ (blended rate)=  68
+Total Onsite dollar savings in $  = 9520
+"  Offshore Billing rate per hour in $ (blended rate) =  25
+Total Offshore dollar savings in $  = 14000
+
+ Total Savings =  $ 23520
