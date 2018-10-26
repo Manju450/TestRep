@@ -1,0 +1,128 @@
+Before Idea Implementation:
+
+Before this implementation, testers used to do below activities manually in CICS screens,
+BCAPS Application:
+1)	Submitting new applications by filling mandatory customer details in multiple screens
+2)	Approving the applications and noting down application IDs
+3)	Verifying whether is application is in Approved or Pending status
+4)	Verifying whether Credit card number is added to the application after processing.
+
+TSYS:
+1)	Verifying the Credit card details in multiple screens
+2)	Setting the statement date for multiple cards
+3)	Posting purchase, cash and balance transfer transactions
+4)	Fetching specific card details from TSYS screens
+5)	Taking screenshots of multiple screens during test execution
+
+RAFT:
+1)	Adding balance for Savings account
+2)	Linking Savings and Secured card number
+
+These processes were so monotonous and time consuming which led to lot of manual errors and in some cases testing team ended up with insufficient test data.
+
+Kaizen Idea:
+
+Kaizen idea was to have a process to automate the activities that we do in CICS screens.
+
+We developed an Excel-based macro utility which would communicate with CICS screen (BlueZone emulator). This macro utility can,
+-	Copy text from excel and Input text into the screen
+-	Fetch the required information from the screen and save them into excel sheet
+-	Capture screenshots and paste them into a word document.
+
+Using these capabilities, multiple macro utilities which can accomplish separate tasks are developed.
+
+Below are steps to show how to use excel macro for inputting text:
+1)	Tester to provide customer details in the spreadsheet
+2)	Tester needs to login into the specific application (BCAPS / TSYS / RAFT)
+3)	Excel macro will input these customer details into CICS screens
+4)	Excel macro will verify whether the customer details are accepted by the application and update the success/fail status in spreadsheet.
+5)	Excel macro will fetch the specific approval / rejection codes and update in Spreadsheet.
+6)	Excel macro will create word document for each customer / test case and pastes the captured screenshots into them. Word document will be saved with Test Case name.
+
+
+After Idea Implementation:
+Tester's doesn’t need to fill all customer details in multiple tabs and no need to approve with multiple roles.This tool will automatically fill all the details and apoproves it thereby onboard a Customer successfully.
+
+Testers do not need spend time in doing repetitive actions in CICS screens. Since the macro has the capability to capture screenshots as well, lot of time and effort has been saved.
+
+
+Benefits:
+•	Saves time on creating preconditions (Onboarding customer) and so tester can focus more on execution instead of test data prep.
+•	Testers don’t need to fill all the details manually thereby reducing manual effort.
+•	Testers can choose what data is required to fill or fetch.
+•	Testers do not need to spend time in capturing screenshots and formatting word documents as the macro will create word documents, pastes the screenshots and saves the document with test case name.
+
+
+Personal / Team Value and Savings:
+Calculation
+
+Excel-Macros usage in Short Term Acquisition Project:
+
+Total number of customer on boarded: 1000
+Total number of customers / cards data fetched: 1500
+Total number of screenshots captured:	1100
+Total number of cards verified (Success / Fail status): 1500 
+Total number of accounts conditioned (Posting Balances, Changing Statement Date etc.): 900
+
+Before Automation (Manual Effort):
+Effort for manually on boarding 1000 customers: 166 Hours (6 customer / Hour)
+Effort for manually fetching data for 1500 customers: 75 Hours (20 customers / Hour)
+Effort for manually capturing screenshots for 1100 test cases: 184 Hours (6 Screenshots / Hour)
+Effort for manually verifying 1500 cards details: 75 Hours (20 Cards / Hour)
+Effort for manually conditioning 900 cards: 30 Hours (30 Cards / Hour)
+
+Total Manual Effort = 530 Hours
+
+After Automation:
+Effort for on boarding 1000 customers: 2 Hours
+Effort for fetching data for 1500 customers: 2 Hours
+Effort for capturing screenshots for 1100 screenshots: 8 Hours
+Effort for verifying 1500 cards: 2 Hours
+Effort for conditioning 900 Cards: 1 Hour
+
+Total Automation Effort : 15 Hours
+
+Calculation Details:
+Net Savings = Manual Effort – Automation Effort = 530 – 15 = 515 Hours
+Offshore Billing rate per hour in $ (blended rate) =  25
+Total Offshore dollar savings in $ = 12875.00
+
+
+
+
+550 Test Cases(150 Pave + 400 NorthStar) Customers onboarded. 
+
+This is a continuos process and hence this tool can be reused for multiple releases in a year
+Pave - Expected to have 2 releases in a year
+CBR\Northstar - Expected to have 2 releases in a year
+
+Hence In a year this macro can be used atleast 4 times i.e 550*4 = 2200 test cases
+ 
+Before Automation:     
+Time  Taken for onboarding one customer in Hrs = 0.35
+     
+After Automation:   
+ Time taken for onboarding one customer in Hrs  = 0.03
+ 
+Calculation Details: 
+Manual Process:   
+Time  Taken for onboarding one customer in Hrs =  0.35
+On-boarding customer to be created for # of test cases = 2200
+Total Time taken for onboarding 2200 customer in Hrs =770
+ 
+Automated Process: 
+   Time spent in creating the solution in Hrs =  4
+   Total Time taken for onboarding  customer in Hrs =  0.03 
+   On-boarding customer to be created for # of test cases = 2200
+   Total Time taken for creating 2200 customers in Hrs =  70
+
+
+Net Savings: Manual Effort - Automated Effort in Hrs = 700
+  
+With 20-80 Onsite Offshore ratio:
+ Onsite Billing rate per hour in $ (blended rate)=  68
+Total Onsite dollar savings in $  = 9520
+"  Offshore Billing rate per hour in $ (blended rate) =  25
+Total Offshore dollar savings in $  = 14000
+
+ Total Savings =  $ 23520
